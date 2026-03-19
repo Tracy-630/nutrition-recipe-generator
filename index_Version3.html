@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人营养和食谱生成器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🥗 个人营养和食谱生成器</h1>
+            <p>根据你的需求获取个性化的营养计划和食谱</p>
+        </header>
+
+        <!-- 第一步：基本信息 -->
+        <section id="step1" class="step active">
+            <h2>第一步：告诉我们你的信息</h2>
+            <form id="form1">
+                <div class="form-group">
+                    <label>姓名：</label>
+                    <input type="text" id="name" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>年龄：</label>
+                        <input type="number" id="age" min="1" max="120" required>
+                    </div>
+                    <div class="form-group">
+                        <label>性别：</label>
+                        <select id="gender" required>
+                            <option value="">选择</option>
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>身高 (厘米)：</label>
+                        <input type="number" id="height" min="50" max="250" required>
+                    </div>
+                    <div class="form-group">
+                        <label>体重 (千克)：</label>
+                        <input type="number" id="weight" min="20" max="300" step="0.1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>你的运动频率如何？</label>
+                    <select id="activity" required>
+                        <option value="">选择</option>
+                        <option value="1.2">久坐不动（几乎没有运动）</option>
+                        <option value="1.375">轻度活动（每周1-3天）</option>
+                        <option value="1.55">中度活动（每周3-5天）</option>
+                        <option value="1.725">非常活跃（每周6-7天）</option>
+                        <option value="1.9">极度活跃（高强度日常运动）</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>你的目标：</label>
+                    <select id="goal" required>
+                        <option value="">选择</option>
+                        <option value="loss">减肥（减少500卡路里/天）</option>
+                        <option value="maintain">维持体重（相同卡路里）</option>
+                        <option value="gain">增重（增加500卡路里/天）</option>
+                    </select>
+                </div>
+
+                <button type="button" onclick="goToStep(2)" class="btn">下一步：过敏原</button>
+            </form>
+        </section>
+
+        <!-- 第二步：过敏原 -->
+        <section id="step2" class="step">
+            <h2>第二步：你有过敏吗？</h2>
+            <form id="form2">
+                <p class="subtitle">选择你有过敏的食物（如果有的话）：</p>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox">
+                        <input type="checkbox" name="allergen" value="peanuts">
+                        花生
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="allergen" value="tree_nuts">
+                        坚果
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="allergen" value="shellfish">
+                        贝类
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="allergen" value="fish">
+                        鱼
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="allergen" value="eggs">
+                        鸡蛋
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="allergen" value="dairy">
+                        乳制品
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="allergen" value="gluten">
+                        麸质（面筋）
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="allergen" value="soy">
+                        大豆
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>饮食偏好：</label>
+                    <select id="dietType" required>
+                        <option value="">选择</option>
+                        <option value="omnivore">杂食</option>
+                        <option value="vegetarian">素食（包括蛋和乳制品）</option>
+                        <option value="vegan">纯素食</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" onclick="goToStep(1)" class="btn btn-secondary">返回</button>
+                    <button type="button" onclick="goToStep(3)" class="btn">查看你的计划！</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 第三步：结果 -->
+        <section id="step3" class="step">
+            <div class="results-header">
+                <h2>你的个性化营养计划</h2>
+                <p id="greeting"></p>
+            </div>
+
+            <div class="nutrition-box">
+                <h3>每日营养目标</h3>
+                <div class="nutrition-grid">
+                    <div class="nutrition-card">
+                        <div class="label">每日热量</div>
+                        <div class="value" id="tdee">--</div>
+                    </div>
+                    <div class="nutrition-card">
+                        <div class="label">蛋白质</div>
+                        <div class="value" id="protein">--</div>
+                    </div>
+                    <div class="nutrition-card">
+                        <div class="label">碳水化合物</div>
+                        <div class="value" id="carbs">--</div>
+                    </div>
+                    <div class="nutrition-card">
+                        <div class="label">脂肪</div>
+                        <div class="value" id="fat">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipes-box">
+                <h3>为你推荐的食谱</h3>
+                <div id="recipesContainer" class="recipes-grid">
+                    <!-- 食谱将加载在这里 -->
+                </div>
+            </div>
+
+            <button type="button" onclick="goToStep(1)" class="btn btn-full">重新开始</button>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
